@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Health Department Logo - Placeholder -->
+  <rect width="120" height="120" rx="8" fill="#0066CC"/>
+
+  <!-- Medical Cross Symbol -->
+  <rect x="50" y="25" width="20" height="70" rx="2" fill="white"/>
+  <rect x="25" y="50" width="70" height="20" rx="2" fill="white"/>
+
+  <!-- Health Plus Accent -->
+  <circle cx="85" cy="35" r="12" fill="#00A651"/>
+  <rect x="82" y="29" width="6" height="12" rx="1" fill="white"/>
+  <rect x="79" y="32" width="12" height="6" rx="1" fill="white"/>
+</svg>

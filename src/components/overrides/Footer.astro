@@ -1,0 +1,43 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+import Feedback from '../Feedback.astro';
+
+// Check if this is the homepage (splash template) or a regular doc page
+// Safety check for pages without entry.data (like 404)
+const isSplashPage = Astro.props.entry?.data?.template === 'splash';
+const isHomepage = Astro.url.pathname === '/' || Astro.url.pathname === '';
+
+// Only show feedback on regular doc pages (not splash/homepage)
+const shouldShowFeedback = !isSplashPage && !isHomepage;
+---
+
+{/* Only show Feedback component on regular doc pages, not on splash pages (homepage) */}
+{shouldShowFeedback && (
+	<div class="feedback-section">
+		<!-- Visual separator before feedback -->
+		<div class="feedback-separator"></div>
+		<Feedback />
+	</div>
+)}
+
+<!-- Render default Starlight footer (includes Pagination, LastUpdated, EditLink) -->
+<Default {...Astro.props}><slot /></Default>
+
+<style>
+	.feedback-section {
+		margin-bottom: 2rem;
+	}
+
+	.feedback-separator {
+		height: 1px;
+		background: var(--sl-color-hairline-light);
+		margin: 2rem 0 1.5rem 0;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.feedback-separator {
+			background: var(--sl-color-hairline);
+		}
+	}
+</style>

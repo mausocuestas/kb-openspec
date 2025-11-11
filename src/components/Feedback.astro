@@ -1,0 +1,485 @@
+---
+/**
+ * Feedback Component
+ * Allows users to provide feedback on documents with thumbs up/down and optional comments
+ * This is UI-only implementation - Story 2.2 will add backend integration
+ */
+
+interface Props {
+	documentPath?: string;
+	documentTitle?: string;
+}
+
+const { documentPath, documentTitle } = Astro.props;
+
+// Get document path and title from current page if not provided
+const currentPath = documentPath || Astro.url.pathname;
+const pageTitle = documentTitle || 'documento';
+---
+
+<div class="feedback-widget" data-feedback-component>
+	<div class="feedback-container">
+		<div class="feedback-card">
+			<div class="feedback-header">
+				<h3 class="feedback-title">Este documento foi útil?</h3>
+				<p class="feedback-description">Seu feedback nos ajuda a melhorar continuamente o conteúdo.</p>
+			</div>
+
+			<div class="feedback-content">
+				<!-- Rating Buttons -->
+				<div class="feedback-buttons">
+					<button
+						type="button"
+						class="feedback-btn feedback-btn-outline"
+						data-rating="positive"
+						aria-label="Documento útil"
+					>
+						<span class="feedback-btn-icon">👍</span>
+						<span>Útil</span>
+					</button>
+					<button
+						type="button"
+						class="feedback-btn feedback-btn-outline"
+						data-rating="negative"
+						aria-label="Documento não útil"
+					>
+						<span class="feedback-btn-icon">👎</span>
+						<span>Não útil</span>
+					</button>
+				</div>
+
+				<!-- Comment Textarea (hidden initially) -->
+				<div class="feedback-comment-container" style="display: none;" data-comment-section>
+					<label for="feedback-comment" class="feedback-label">
+						Comentário (opcional)
+					</label>
+					<textarea
+						id="feedback-comment"
+						class="feedback-textarea"
+						placeholder="Conte-nos mais sobre sua experiência..."
+						maxlength="1000"
+						rows="4"
+					></textarea>
+					<p class="feedback-helper-text">Seu feedback é valioso para nós.</p>
+				</div>
+
+				<!-- Submit Button (hidden initially) -->
+				<div class="feedback-actions" style="display: none;" data-actions-section>
+					<button
+						type="button"
+						class="feedback-btn feedback-btn-primary"
+						data-submit-btn
+						disabled
+					>
+						<svg class="feedback-btn-icon-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="m22 2-7 20-4-9-9-4Z"/>
+							<path d="M22 2 11 13"/>
+						</svg>
+						<span data-btn-text>Enviar Feedback</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Toast Container -->
+	<div class="feedback-toast-container" data-toast-container></div>
+</div>
+
+<script>
+	// Client-side interactivity for feedback component
+	if (typeof window !== 'undefined') {
+		document.addEventListener('DOMContentLoaded', () => {
+			const feedbackWidget = document.querySelector('[data-feedback-component]');
+			if (!feedbackWidget) return;
+
+			const ratingButtons = feedbackWidget.querySelectorAll('[data-rating]');
+			const commentSection = feedbackWidget.querySelector('[data-comment-section]') as HTMLElement;
+			const actionsSection = feedbackWidget.querySelector('[data-actions-section]') as HTMLElement;
+			const submitBtn = feedbackWidget.querySelector('[data-submit-btn]') as HTMLButtonElement;
+			const btnText = submitBtn?.querySelector('[data-btn-text]');
+			const toastContainer = feedbackWidget.querySelector('[data-toast-container]') as HTMLElement;
+
+			let selectedRating: 'positive' | 'negative' | null = null;
+			let isSubmitting = false;
+
+			// Handle rating button clicks
+			ratingButtons.forEach((btn) => {
+				btn.addEventListener('click', () => {
+					const rating = btn.getAttribute('data-rating') as 'positive' | 'negative';
+
+					// Update selected rating
+					selectedRating = rating;
+
+					// Update button states
+					ratingButtons.forEach((b) => {
+						if (b === btn) {
+							b.classList.remove('feedback-btn-outline');
+							b.classList.add('feedback-btn-selected');
+						} else {
+							b.classList.add('feedback-btn-outline');
+							b.classList.remove('feedback-btn-selected');
+						}
+					});
+
+					// Show comment section and submit button
+					if (commentSection && actionsSection) {
+						commentSection.style.display = 'block';
+						actionsSection.style.display = 'block';
+
+						// Enable submit button
+						if (submitBtn) {
+							submitBtn.disabled = false;
+						}
+
+						// Smooth scroll to textarea
+						setTimeout(() => {
+							commentSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+						}, 100);
+					}
+				});
+			});
+
+			// Handle submit button click
+			if (submitBtn) {
+				submitBtn.addEventListener('click', async () => {
+					if (isSubmitting || !selectedRating) return;
+
+					isSubmitting = true;
+					submitBtn.disabled = true;
+
+					// Show loading state
+					if (btnText) {
+						btnText.textContent = 'Enviando...';
+					}
+
+					// Simulate submission (Story 2.2 will add real backend)
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+
+					// Show success toast
+					showToast('Obrigado pelo seu feedback!', 'success');
+
+					// Reset form after 2 seconds
+					setTimeout(() => {
+						resetForm();
+					}, 2000);
+
+					isSubmitting = false;
+				});
+			}
+
+			function showToast(message: string, type: 'success' | 'error' = 'success') {
+				if (!toastContainer) return;
+
+				const toast = document.createElement('div');
+				toast.className = `feedback-toast feedback-toast-${type}`;
+				toast.innerHTML = `
+					<div class="feedback-toast-content">
+						<svg class="feedback-toast-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							${type === 'success'
+								? '<path d="M20 6 9 17l-5-5"/>'
+								: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>'
+							}
+						</svg>
+						<span>${message}</span>
+					</div>
+				`;
+
+				toastContainer.appendChild(toast);
+
+				// Trigger animation
+				setTimeout(() => toast.classList.add('feedback-toast-show'), 10);
+
+				// Remove toast after 4 seconds
+				setTimeout(() => {
+					toast.classList.remove('feedback-toast-show');
+					setTimeout(() => toast.remove(), 300);
+				}, 4000);
+			}
+
+			function resetForm() {
+				selectedRating = null;
+
+				// Reset buttons
+				ratingButtons.forEach((btn) => {
+					btn.classList.add('feedback-btn-outline');
+					btn.classList.remove('feedback-btn-selected');
+				});
+
+				// Hide sections
+				if (commentSection) commentSection.style.display = 'none';
+				if (actionsSection) actionsSection.style.display = 'none';
+
+				// Reset textarea
+				const textarea = feedbackWidget.querySelector('#feedback-comment') as HTMLTextAreaElement;
+				if (textarea) textarea.value = '';
+
+				// Reset button
+				if (submitBtn) {
+					submitBtn.disabled = true;
+					if (btnText) btnText.textContent = 'Enviar Feedback';
+				}
+			}
+		});
+	}
+</script>
+
+<style>
+	.feedback-widget {
+		width: 100%;
+		margin-top: 3rem;
+	}
+
+	.feedback-container {
+		max-width: 100%;
+	}
+
+	.feedback-card {
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-bg);
+		box-shadow: 0 1px 3px 0 oklch(0.00 0 0 / 0.1);
+		padding: 1.5rem;
+	}
+
+	.feedback-header {
+		margin-bottom: 1.5rem;
+	}
+
+	.feedback-title {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: var(--sl-color-text);
+		margin: 0 0 0.5rem 0;
+		line-height: 1.4;
+	}
+
+	.feedback-description {
+		font-size: 0.875rem;
+		color: var(--sl-color-gray-3);
+		margin: 0;
+	}
+
+	.feedback-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.feedback-buttons {
+		display: flex;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+
+	.feedback-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		white-space: nowrap;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		font-weight: 500;
+		transition: all 0.2s;
+		cursor: pointer;
+		padding: 0.5rem 1rem;
+		min-height: 2.5rem;
+	}
+
+	.feedback-btn:focus-visible {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: 2px;
+	}
+
+	.feedback-btn:disabled {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	.feedback-btn-outline {
+		border: 2px solid var(--sl-color-accent);
+		background: transparent;
+		color: var(--sl-color-accent);
+	}
+
+	.feedback-btn-outline:hover:not(:disabled) {
+		background: var(--sl-color-accent-low);
+	}
+
+	.feedback-btn-selected {
+		background: var(--sl-color-accent);
+		color: white;
+		border: 2px solid var(--sl-color-accent);
+	}
+
+	.feedback-btn-primary {
+		background: var(--sl-color-accent);
+		color: white;
+		border: none;
+	}
+
+	.feedback-btn-primary:hover:not(:disabled) {
+		background: var(--sl-color-accent-high);
+	}
+
+	.feedback-btn-icon {
+		font-size: 1.25rem;
+		line-height: 1;
+	}
+
+	.feedback-btn-icon-svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.feedback-comment-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		animation: slideDown 0.3s ease-out;
+	}
+
+	.feedback-label {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: var(--sl-color-text);
+	}
+
+	.feedback-textarea {
+		width: 100%;
+		min-height: 80px;
+		border-radius: 0.375rem;
+		border: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-bg);
+		padding: 0.75rem;
+		font-size: 0.875rem;
+		color: var(--sl-color-text);
+		font-family: inherit;
+		resize: vertical;
+		transition: all 0.2s;
+	}
+
+	.feedback-textarea::placeholder {
+		color: var(--sl-color-gray-4);
+	}
+
+	.feedback-textarea:focus {
+		outline: none;
+		ring: 2px;
+		ring-color: var(--sl-color-accent);
+		ring-offset: 2px;
+		border-color: var(--sl-color-accent);
+	}
+
+	.feedback-textarea:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.feedback-helper-text {
+		font-size: 0.75rem;
+		color: var(--sl-color-gray-4);
+		text-align: right;
+		margin: 0;
+	}
+
+	.feedback-actions {
+		display: flex;
+		justify-content: flex-end;
+		animation: slideDown 0.3s ease-out;
+	}
+
+	/* Toast Styles */
+	.feedback-toast-container {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		z-index: 9999;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		pointer-events: none;
+	}
+
+	.feedback-toast {
+		background: var(--sl-color-bg);
+		border: 1px solid var(--sl-color-hairline);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		box-shadow: 0 4px 6px -1px oklch(0.00 0 0 / 0.1);
+		opacity: 0;
+		transform: translateY(1rem);
+		transition: all 0.3s ease-out;
+		pointer-events: auto;
+		min-width: 300px;
+	}
+
+	.feedback-toast-show {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.feedback-toast-content {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.feedback-toast-icon {
+		flex-shrink: 0;
+	}
+
+	.feedback-toast-success {
+		border-left: 4px solid #00a651;
+	}
+
+	.feedback-toast-success .feedback-toast-icon {
+		color: #00a651;
+	}
+
+	.feedback-toast-error {
+		border-left: 4px solid oklch(0.58 0.24 28.48);
+	}
+
+	.feedback-toast-error .feedback-toast-icon {
+		color: oklch(0.58 0.24 28.48);
+	}
+
+	/* Animations */
+	@keyframes slideDown {
+		from {
+			opacity: 0;
+			transform: translateY(-0.5rem);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Responsive */
+	@media (max-width: 640px) {
+		.feedback-card {
+			padding: 1rem;
+		}
+
+		.feedback-buttons {
+			flex-direction: column;
+		}
+
+		.feedback-btn {
+			width: 100%;
+		}
+
+		.feedback-toast-container {
+			left: 1rem;
+			right: 1rem;
+			bottom: 1rem;
+		}
+
+		.feedback-toast {
+			min-width: auto;
+		}
+	}
+</style>

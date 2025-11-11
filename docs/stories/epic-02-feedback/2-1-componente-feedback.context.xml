@@ -1,0 +1,312 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.1</storyId>
+    <title>Criação do Componente de Feedback</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-09</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/epic-02-feedback/story-2.1-componente-feedback.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>profissional de saúde</asA>
+    <iWant>avaliar e comentar sobre a utilidade dos documentos</iWant>
+    <soThat>os gestores possam melhorar continuamente o conteúdo</soThat>
+    <tasks>
+      <task id="2.1.1" status="pending">
+        <title>Design da Interface de Feedback com shadcn</title>
+        <description>Desenhar a UI usando componentes shadcn: Card, Button, Textarea, Toast. Definir os estados visuais (idle, loading, success, error). Layout: Card container com título "Este documento foi útil?", botões 👍/👎, textarea condicional, botão de envio.</description>
+      </task>
+      <task id="2.1.2" status="pending">
+        <title>Criar Componente Astro para Feedback</title>
+        <description>Criar o arquivo src/components/Feedback.astro. Estrutura usando Card do shadcn como container principal. Botões de avaliação (👍/👎) usando Button com variants (outline para não selecionado, default para selecionado). Campo de comentário usando Textarea do shadcn (exibido apenas após seleção de 👍 ou 👎). Botão de envio usando Button com variant="default" e ícone Send do lucide-react.</description>
+      </task>
+      <task id="2.1.3" status="pending">
+        <title>Adicionar Interatividade (Client-Side)</title>
+        <description>Adicionar script para gerenciar o estado dos botões e do campo de texto. Usar Toast do shadcn para feedback visual após submissão (sucesso ou erro). Implementar estados de loading usando disabled state no Button durante envio. Adicionar Skeleton (opcional) se houver carregamento assíncrono.</description>
+      </task>
+      <task id="2.1.4" status="pending">
+        <title>Integrar Componente na Página</title>
+        <description>Customizar o layout do Starlight (e.g., Footer.astro) para incluir o componente de feedback no final das páginas de documentos. Adicionar Separator antes do componente de feedback para divisão visual.</description>
+      </task>
+      <task id="2.1.5" status="pending">
+        <title>Simular Submissão (Placeholder)</title>
+        <description>Ao enviar, o componente deve exibir um Toast de agradecimento, sem enviar dados reais. Toast deve ter ícone de sucesso (lucide-react Check) e mensagem "Obrigado pelo seu feedback!".</description>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1" status="pending">Design da interface de feedback criado com shadcn components</criterion>
+    <criterion id="AC2" status="pending">Componente Feedback.astro criado e funcional</criterion>
+    <criterion id="AC3" status="pending">Estados visuais implementados (idle, loading, success, error)</criterion>
+    <criterion id="AC4" status="pending">Botões 👍/👎 funcionais</criterion>
+    <criterion id="AC5" status="pending">Campo de comentário aparece após seleção</criterion>
+    <criterion id="AC6" status="pending">Toast de confirmação após envio</criterion>
+    <criterion id="AC7" status="pending">Componente integrado no footer das páginas de documentos</criterion>
+    <criterion id="AC8" status="pending">Separador visual antes do componente</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-02.md</path>
+        <title>Epic Technical Specification: Implementação do Sistema de Feedback e Governança</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>FeedbackWidget.astro: Reusable feedback UI component with thumbs up/down and comment field. Inputs: Document metadata (path, title) from page context. Outputs: Rendered feedback form with submit handler. Location: src/components/</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-02.md</path>
+        <title>Epic Technical Specification - Component Hierarchy</title>
+        <section>Detailed Design - Component Hierarchy</section>
+        <snippet>FeedbackWidget.astro contains Button (shadcn) for Thumbs Up/Down, Textarea (shadcn) for comment field, and Toast (shadcn) for confirmation message. Should be integrated into Document Page Layout at the bottom.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-02.md</path>
+        <title>Epic Technical Specification - Data Models</title>
+        <section>Data Models and Contracts - TypeScript Interfaces</section>
+        <snippet>FeedbackSubmissionPayload interface: { documentPath: string, documentTitle: string, rating: boolean, comment?: string }. This will be used in Story 2.2 for API submission.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PR.md</path>
+        <title>PRD - Epic 2 Requirements</title>
+        <section>Requisitos Funcionais - FR4</section>
+        <snippet>FR4 (Interface de Feedback): Exibir seção de feedback com avaliação (👍/👎) e campo de comentário. This story implements the UI-only portion without backend integration.</snippet>
+      </doc>
+      <doc>
+        <path>docs/Arquitetura.md</path>
+        <title>Architecture - shadcn Component Strategy</title>
+        <section>Estratégia de Componentização com shadcn studio pro</section>
+        <snippet>All custom UI components must be built using shadcn studio pro as base library. Use shadcn Button, Card, Textarea, Toast for this story. Components must be reusable, accessible (WCAG 2.1 AA), and follow shadcn conventions. Avoid inline styles; use Tailwind classes and CSS variables from design system.</snippet>
+      </doc>
+      <doc>
+        <path>docs/Arquitetura.md</path>
+        <title>Architecture - Tech Stack</title>
+        <section>Tech Stack - UI Components</section>
+        <snippet>UI Components: shadcn-astro (latest), lucide-react (latest) for icons. Framework: Astro ^5.x with React integration. Styling: Tailwind CSS ^4.x with custom CSS variables.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/components/ui/button.tsx</path>
+        <kind>React component (shadcn)</kind>
+        <symbol>Button</symbol>
+        <lines>1-55</lines>
+        <reason>shadcn Button component to be used for thumbs up/down and submit buttons. Supports variants: default, outline, destructive, secondary, ghost, link. Uses Starlight CSS variables for theming.</reason>
+      </artifact>
+      <artifact>
+        <path>src/components/ui/card.tsx</path>
+        <kind>React component (shadcn)</kind>
+        <symbol>Card, CardHeader, CardTitle, CardContent, CardFooter</symbol>
+        <lines>1-76</lines>
+        <reason>shadcn Card components to be used as the main container for the feedback widget. Provides Card structure with header, content, and footer sections using Starlight theme variables.</reason>
+      </artifact>
+      <artifact>
+        <path>src/components/ui/separator.tsx</path>
+        <kind>React component (shadcn)</kind>
+        <symbol>Separator</symbol>
+        <lines>N/A</lines>
+        <reason>shadcn Separator component exists and should be used for visual division before the feedback widget.</reason>
+      </artifact>
+      <artifact>
+        <path>src/components/DocumentMetadata.astro</path>
+        <kind>Astro component</kind>
+        <symbol>DocumentMetadata</symbol>
+        <lines>1-99</lines>
+        <reason>Example of existing Astro component that demonstrates component structure, Starlight theme integration, client-side script patterns, and responsive design. Can serve as reference for Feedback.astro implementation.</reason>
+      </artifact>
+      <artifact>
+        <path>src/lib/utils.ts</path>
+        <kind>TypeScript utility</kind>
+        <symbol>cn</symbol>
+        <lines>1-11</lines>
+        <reason>Utility function cn() for merging Tailwind CSS classes with clsx. Required by all shadcn components for conditional styling. Import this in Feedback.astro when using shadcn components.</reason>
+      </artifact>
+      <artifact>
+        <path>astro.config.mjs</path>
+        <kind>Configuration file</kind>
+        <symbol>starlightConfig</symbol>
+        <lines>1-62</lines>
+        <reason>Astro Starlight configuration showing custom component overrides pattern (ContentPanel). Use similar approach if needing to override Footer for feedback integration. React integration is enabled.</reason>
+      </artifact>
+      <artifact>
+        <path>src/components/overrides/ContentPanel.astro</path>
+        <kind>Astro component override</kind>
+        <symbol>ContentPanel</symbol>
+        <lines>N/A</lines>
+        <reason>Existing Starlight component override example. May need to create Footer.astro override or enhance ContentPanel to integrate feedback widget at bottom of document pages.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="@astrojs/starlight" version="^0.36.2" usage="Core documentation framework" />
+        <package name="astro" version="^5.6.1" usage="Static site generator framework" />
+        <package name="@astrojs/react" version="^4.4.2" usage="React integration for shadcn components" />
+        <package name="react" version="^19.2.0" usage="Required for shadcn React components" />
+        <package name="react-dom" version="^19.2.0" usage="Required for shadcn React components" />
+        <package name="class-variance-authority" version="^0.7.1" usage="Used by shadcn Button for variant management" />
+        <package name="clsx" version="^2.1.1" usage="Class name utility used by cn() function" />
+        <package name="tailwind-merge" version="^3.3.1" usage="Tailwind class merging used by cn() function" />
+        <package name="lucide-react" version="^0.553.0" usage="Icon library for Send, Check, and other icons" />
+        <package name="tailwindcss" version="^4.1.17" usage="CSS framework for styling" />
+      </node>
+      <missing>
+        <package name="Textarea (shadcn)" reason="Not yet installed - MUST be added via shadcn CLI before implementation" />
+        <package name="Toast (shadcn)" reason="Not yet installed - MUST be added via shadcn CLI before implementation" />
+        <package name="Skeleton (shadcn)" reason="Optional - install if async loading states needed" />
+      </missing>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint id="C1" type="architectural">
+      <description>All custom UI components MUST be built using shadcn studio pro as base library</description>
+      <source>docs/Arquitetura.md - Section 3.5</source>
+    </constraint>
+    <constraint id="C2" type="accessibility">
+      <description>Components must be accessible (WCAG 2.1 AA) - ensure proper ARIA labels, keyboard navigation, and focus management</description>
+      <source>docs/Arquitetura.md - NFR7 Componentização</source>
+    </constraint>
+    <constraint id="C3" type="styling">
+      <description>Avoid inline styles; use Tailwind classes and CSS variables from Starlight design system (--sl-color-*)</description>
+      <source>docs/Arquitetura.md - Section 3.5</source>
+    </constraint>
+    <constraint id="C4" type="integration">
+      <description>Component must be non-intrusive but easily visible, positioned at bottom of document pages</description>
+      <source>docs/stories/epic-02-feedback/story-2.1-componente-feedback.md - Notes</source>
+    </constraint>
+    <constraint id="C5" type="functionality">
+      <description>This story implements UI ONLY - no backend integration. Story 2.2 will add actual submission logic.</description>
+      <source>docs/stories/epic-02-feedback/story-2.1-componente-feedback.md - Notes</source>
+    </constraint>
+    <constraint id="C6" type="user-experience">
+      <description>Feedback is anonymous by default (no authentication in this phase). Epic 5 will add user auth.</description>
+      <source>docs/stories/epic-02-feedback/story-2.1-componente-feedback.md - Notes</source>
+    </constraint>
+    <constraint id="C7" type="component-pattern">
+      <description>Use Astro component with client-side script tag for interactivity. Reference DocumentMetadata.astro for script patterns.</description>
+      <source>src/components/DocumentMetadata.astro - Lines 27-54</source>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>FeedbackWidget.astro Props</name>
+      <kind>Astro component interface</kind>
+      <signature>
+        interface Props {
+          documentPath?: string;  // e.g., "/protocolos/covid-19" - optional, can derive from Astro.url
+          documentTitle?: string; // e.g., "Protocolo COVID-19" - optional, can derive from page metadata
+        }
+      </signature>
+      <path>src/components/Feedback.astro (to be created)</path>
+    </interface>
+    <interface>
+      <name>FeedbackSubmissionPayload (Future Use)</name>
+      <kind>TypeScript interface</kind>
+      <signature>
+        interface FeedbackSubmissionPayload {
+          documentPath: string;
+          documentTitle: string;
+          rating: boolean;      // true = 👍, false = 👎
+          comment?: string;
+        }
+      </signature>
+      <path>docs/tech-spec-epic-02.md - Will be used in Story 2.2 for API integration</path>
+    </interface>
+    <interface>
+      <name>shadcn Button Component</name>
+      <kind>React component API</kind>
+      <signature>
+        &lt;Button variant="default|outline|secondary|ghost|link|destructive" size="default|sm|lg|icon" disabled={boolean}&gt;
+          children
+        &lt;/Button&gt;
+      </signature>
+      <path>src/components/ui/button.tsx</path>
+    </interface>
+    <interface>
+      <name>shadcn Card Components</name>
+      <kind>React component API</kind>
+      <signature>
+        &lt;Card&gt;
+          &lt;CardHeader&gt;
+            &lt;CardTitle&gt;Title&lt;/CardTitle&gt;
+          &lt;/CardHeader&gt;
+          &lt;CardContent&gt;Content&lt;/CardContent&gt;
+          &lt;CardFooter&gt;Footer&lt;/CardFooter&gt;
+        &lt;/Card&gt;
+      </signature>
+      <path>src/components/ui/card.tsx</path>
+    </interface>
+    <interface>
+      <name>Textarea Component (To Be Installed)</name>
+      <kind>React component API (shadcn)</kind>
+      <signature>
+        &lt;Textarea placeholder="..." maxLength={1000} disabled={boolean} /&gt;
+      </signature>
+      <path>Will be: src/components/ui/textarea.tsx (install via shadcn CLI)</path>
+    </interface>
+    <interface>
+      <name>Toast Component (To Be Installed)</name>
+      <kind>React component API (shadcn)</kind>
+      <signature>
+        import { useToast } from '@/hooks/use-toast';
+        const { toast } = useToast();
+        toast({ title: "Success", description: "Message here" });
+      </signature>
+      <path>Will be: src/components/ui/toast.tsx + src/hooks/use-toast.ts (install via shadcn CLI)</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      No formal testing framework is currently configured in this project (no test files found). Testing for this story should be manual:
+      1. Visual testing: Verify component renders correctly with proper styling
+      2. Interaction testing: Click thumbs up/down, verify comment field appears, submit form
+      3. State management: Verify loading states, button disabled states work correctly
+      4. Toast testing: Verify toast appears with correct message after submission
+      5. Accessibility testing: Keyboard navigation, screen reader support, ARIA labels
+      6. Responsive testing: Verify component works on mobile/tablet/desktop viewports
+    </standards>
+    <locations>
+      No test directory structure exists yet. Consider creating:
+      - tests/components/ for component tests (future)
+      - tests/integration/ for integration tests (future)
+    </locations>
+    <ideas>
+      <idea criterionId="AC1">
+        Test: Verify shadcn components (Card, Button) render with correct theme variables
+        Approach: Visual inspection in browser dev tools, check CSS variable usage
+      </idea>
+      <idea criterionId="AC2">
+        Test: Load a document page and verify Feedback.astro component renders at bottom
+        Approach: Navigate to /protocolos/exemplo and check DOM for feedback component
+      </idea>
+      <idea criterionId="AC3">
+        Test: Verify component shows idle → loading → success states correctly
+        Approach: Click submit button, observe button disabled state and toast appearance
+      </idea>
+      <idea criterionId="AC4">
+        Test: Click thumbs up/down buttons, verify one becomes selected (variant changes)
+        Approach: Click 👍, verify button style changes from outline to default variant
+      </idea>
+      <idea criterionId="AC5">
+        Test: Verify textarea is hidden initially, appears after thumbs up/down selection
+        Approach: Initial state check (no textarea), click 👍, verify textarea appears
+      </idea>
+      <idea criterionId="AC6">
+        Test: Submit form, verify toast appears with "Obrigado pelo seu feedback!" message
+        Approach: Fill form, click submit, check for toast component in DOM
+      </idea>
+      <idea criterionId="AC7">
+        Test: Verify component integrates in footer of ALL document pages (not homepage)
+        Approach: Navigate to multiple category pages (protocolos, formularios, manuais)
+      </idea>
+      <idea criterionId="AC8">
+        Test: Verify Separator component renders above feedback widget
+        Approach: Check DOM for separator element before feedback component
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

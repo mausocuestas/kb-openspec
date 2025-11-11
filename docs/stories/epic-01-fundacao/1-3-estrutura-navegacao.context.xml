@@ -1,0 +1,149 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.3</storyId>
+    <title>Criação da Estrutura de Navegação e Conteúdo</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-07</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/epic-01-fundacao/story-1.3-estrutura-navegacao.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>um profissional de saúde</asA>
+    <iWant>navegar facilmente entre as categorias de documentos</iWant>
+    <soThat>possa encontrar rapidamente a informação que preciso</soThat>
+    <tasks>
+      - 1.3.1: Definir Arquitetura da Informação
+      - 1.3.2 (UX): Validar Arquitetura da Informação
+      - 1.3.3: Configurar a Barra Lateral no Starlight
+      - 1.3.4: Criar Estrutura de Arquivos
+      - 1.3.5: Validar Navegação e Roteamento
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    - AC1: Arquitetura da informação definida e validada
+    - AC2: Card sorting realizado com usuários-chave (UX)
+    - AC3: Barra lateral configurada no Starlight com categorias
+    - AC4: Estrutura de arquivos criada em `src/content/docs/`
+    - AC5: Arquivos de exemplo criados para teste de navegação
+    - AC6: Roteamento validado e funcional
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PR.md</path>
+        <title>PRD: Base de Conhecimento da Saúde</title>
+        <section>FR2 (Navegação)</section>
+        <snippet>Apresentar navegação principal baseada em categorias. A navegação deve otimizar o acesso aos documentos através de uma estrutura intuitiva que permita aos profissionais localizar rapidamente informações críticas.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PR.md</path>
+        <title>PRD: Base de Conhecimento da Saúde</title>
+        <section>História 1.3 - Criação da Estrutura de Navegação e Conteúdo</section>
+        <snippet>Estabelece a base técnica da plataforma usando Astro Starlight, incluindo configuração inicial, identidade visual, navegação, metadados de governança e busca fundamental.</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-01.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>AC3: Navigation Structure (Story 1.3)</section>
+        <snippet>Information architecture defined with key categories (Protocolos, Formulários, Manuais). Card sorting exercise with 3-5 key users validates structure. Sidebar configuration in astro.config.mjs creates category-based navigation. Folder structure in src/content/docs/ mirrors navigation hierarchy with index.md and example documents.</snippet>
+      </doc>
+      <doc>
+        <path>docs/Arquitetura.md</path>
+        <title>Documento de Arquitetura Fullstack</title>
+        <section>Tech Stack - Astro Starlight</section>
+        <snippet>UI & Documentação: Astro Starlight (latest). Content Management: Git-based content storage in src/content/docs/ (NFR4). MDX rendering for rich document format (FR1).</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/epic-01-fundacao/story-1.1-configuracao-inicial.md</path>
+        <title>Story 1.1: Configuração Inicial do Projeto</title>
+        <section>Completion Notes</section>
+        <snippet>Foundation completed: Astro v5.15.4 + Starlight template initialized. Project structure established in src/content/docs/ ready for content organization.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/epic-01-fundacao/story-1.2-personalizacao-tema.md</path>
+        <title>Story 1.2: Personalização da Identidade Visual</title>
+        <section>Completion Notes</section>
+        <snippet>Visual identity customization complete. Theme variables properly override Starlight defaults while maintaining framework functionality. Sidebar navigation styling ready for configuration.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>astro.config.mjs</path>
+        <kind>configuration</kind>
+        <symbol>starlight sidebar config</symbol>
+        <lines>23-25</lines>
+        <reason>Starlight sidebar configuration currently empty (comment: "Navigation will be configured in future stories"). This is where category-based navigation groups will be added.</reason>
+      </file>
+      <file>
+        <path>src/content/docs/index.mdx</path>
+        <kind>content</kind>
+        <symbol>homepage</symbol>
+        <lines>all</lines>
+        <reason>Current homepage. Navigation structure will affect how users access content from this entry point.</reason>
+      </file>
+    </code>
+    <dependencies>
+      <astro>
+        <version>^5.6.1</version>
+        <note>Current version with content collections support</note>
+      </astro>
+      <starlight>
+        <package>@astrojs/starlight</package>
+        <version>^0.36.2</version>
+        <note>Documentation framework with built-in sidebar navigation system</note>
+      </starlight>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Use Starlight's built-in sidebar configuration in astro.config.mjs (do not eject sidebar component unless absolutely necessary)
+    - Follow Starlight content collection conventions: all content in src/content/docs/
+    - Create folder structure that mirrors the intended navigation hierarchy
+    - Each category folder must have an index.md file
+    - Maintain consistency with existing project structure from Stories 1.1 and 1.2
+    - Card sorting exercise (task 1.3.2) is a UX/manual task requiring user participation - document assumptions if users unavailable
+    - Keep URLs clean and SEO-friendly (lowercase, hyphens for spaces)
+    - Ensure navigation structure is scalable for future content additions
+    - All file paths must be project-relative (e.g., "src/content/docs/protocolos")
+  </constraints>
+
+  <interfaces>
+    <starlight-sidebar>
+      <kind>configuration</kind>
+      <signature>sidebar: Array&lt;SidebarGroup&gt; where SidebarGroup = { label: string, items: Array&lt;string | SidebarItem&gt; }</signature>
+      <path>astro.config.mjs</path>
+      <note>Starlight sidebar configuration interface. Can use auto-generated links or manual items. Supports nested groups.</note>
+    </starlight-sidebar>
+    <content-collection>
+      <kind>file-system</kind>
+      <signature>src/content/docs/{category}/{document}.md|mdx</signature>
+      <path>src/content/docs/</path>
+      <note>Starlight content collection file structure. Folder names become URL segments. index.md files represent category landing pages.</note>
+    </content-collection>
+  </interfaces>
+
+  <tests>
+    <standards>This is a navigation structure and content organization story with primarily manual validation. No automated unit tests required initially. Validation done through: (1) Visual inspection of sidebar rendering, (2) Navigation link testing (click each link), (3) URL structure verification, (4) Build process validation (pnpm build succeeds), (5) Card sorting exercise results (manual UX task).</standards>
+    <locations>
+      - Manual testing: Run dev server and navigate through sidebar
+      - Build validation: pnpm build (should complete without errors)
+      - Content validation: Verify all example files accessible via navigation
+    </locations>
+    <ideas>
+      - AC1: Verify category names are clear and aligned with card sorting results (if available)
+      - AC2: Document card sorting exercise results or assumptions made without users
+      - AC3: Test sidebar renders with all categories visible and properly labeled
+      - AC4: Verify folder structure exists: src/content/docs/{category}/
+      - AC5: Verify each category has index.md and 1-2 example .mdx files
+      - AC6: Click each navigation link to ensure routing works correctly
+      - AC6: Check URL structure is clean (e.g., /protocolos/exemplo not /protocolos/exemplo.html)
+      - Navigation scalability: Add a test document to verify auto-discovery works
+      - Responsive test: Verify sidebar navigation works on mobile viewports
+      - Accessibility: Test keyboard navigation through sidebar items (Tab, Enter)
+    </ideas>
+  </tests>
+</story-context>

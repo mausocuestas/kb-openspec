@@ -1,0 +1,25 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import '../assets/custom.css';
+---
+
+<!doctype html>
+<html lang="pt-BR" dir="ltr" data-has-toc data-has-sidebar data-has-hero>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{Astro.props.entry.data.title}</title>
+    <meta name="description" content={Astro.props.entry.data.description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <div class="page sl-flex">
+      <main data-pagefind-body lang="pt-BR" dir="ltr" class="main-frame">
+        <div class="sl-container">
+          <slot />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

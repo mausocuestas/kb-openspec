@@ -1,0 +1,111 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.1</storyId>
+    <title>Configuração Inicial do Projeto Astro Starlight</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/epic-01-fundacao/story-1.1-configuracao-inicial.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>um desenvolvedor</asA>
+    <iWant>configurar o ambiente inicial do projeto Astro Starlight</iWant>
+    <soThat>possamos ter a base da plataforma pronta para desenvolvimento</soThat>
+    <tasks>
+      - 1.1.1: Preparar Ambiente de Desenvolvimento (Node.js LTS, pnpm)
+      - 1.1.2: Inicializar o Projeto Astro com Starlight
+      - 1.1.3: Instalar Dependências e Validar
+      - 1.1.4: Configurar Controle de Versão (git init, commit inicial)
+      - 1.1.5: Limpeza do Conteúdo Padrão (remover exemplos, atualizar título)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    - AC1: Ambiente de desenvolvimento configurado com Node.js LTS e pnpm
+    - AC2: Projeto Astro inicializado com template Starlight
+    - AC3: Servidor de desenvolvimento rodando e acessível via localhost
+    - AC4: Controle de versão Git inicializado com commit inicial
+    - AC5: Conteúdo padrão do Starlight removido e título do site atualizado
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PR.md</path>
+        <title>PRD: Base de Conhecimento da Saúde</title>
+        <section>Épico 1 - História 1.1</section>
+        <snippet>Primeira história do projeto que estabelece a fundação da plataforma. Define a configuração inicial do Astro Starlight como base técnica.</snippet>
+      </doc>
+      <doc>
+        <path>docs/Arquitetura.md</path>
+        <title>Documento de Arquitetura Fullstack</title>
+        <section>Tech Stack (Versão 2.0)</section>
+        <snippet>Framework Principal: Astro ^5.x com Starlight (latest) para documentação. TypeScript ^5.x, Tailwind CSS ^4.x. Gerenciador de pacotes: pnpm (embora arquitetura mencione npm, PRD indica pnpm).</snippet>
+      </doc>
+      <doc>
+        <path>docs/tech-spec-epic-01.md</path>
+        <title>Epic Technical Specification: Fundação da Plataforma</title>
+        <section>AC1: Project Initialization</section>
+        <snippet>Detailed acceptance criteria: Node.js LTS and pnpm installed/verified, Astro Starlight created with TypeScript, dev server running, Git initialized, default content removed and site title updated.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- No existing code to reference - this is the initial setup story -->
+    </code>
+    <dependencies>
+      <nodejs>
+        <version>LTS (Latest Long Term Support)</version>
+        <required>true</required>
+      </nodejs>
+      <pnpm>
+        <version>latest</version>
+        <installCommand>npm install -g pnpm</installCommand>
+      </pnpm>
+      <astro>
+        <version>^5.0.0</version>
+        <note>Installed via pnpm create astro@latest</note>
+      </astro>
+      <starlight>
+        <version>latest</version>
+        <note>Template selection during Astro initialization</note>
+      </starlight>
+      <typescript>
+        <version>^5.6.0</version>
+        <note>Enable TypeScript during project setup</note>
+      </typescript>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Use pnpm as package manager (not npm) throughout the project
+    - Select Starlight template during Astro initialization
+    - Enable TypeScript support
+    - Initialize Git repository after project creation
+    - Remove all default Starlight example content before committing
+    - Update site title in astro.config.mjs to reflect project name
+    - Verify dev server accessible at localhost before completing
+    - Create clean initial commit with project structure
+  </constraints>
+
+  <interfaces>
+    <!-- No interfaces for initial setup story -->
+  </interfaces>
+
+  <tests>
+    <standards>This is a setup story with manual verification. No automated tests required. Validation is done through: (1) successful execution of setup commands, (2) dev server starting without errors, (3) localhost accessible in browser.</standards>
+    <locations>N/A - No test files for initial setup</locations>
+    <ideas>
+      - AC1: Verify Node.js version with `node --version` (should show LTS version)
+      - AC1: Verify pnpm installed with `pnpm --version`
+      - AC2: Verify Astro project created with expected directory structure
+      - AC3: Verify `pnpm dev` starts server and shows localhost URL
+      - AC3: Manual browser test: navigate to localhost and verify Starlight site loads
+      - AC4: Verify `.git` directory exists
+      - AC4: Verify initial commit with `git log`
+      - AC5: Verify default content removed (check src/content/docs/)
+      - AC5: Verify site title updated in astro.config.mjs
+    </ideas>
+  </tests>
+</story-context>

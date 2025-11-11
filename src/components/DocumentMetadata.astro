@@ -1,0 +1,98 @@
+---
+interface Props {
+	version: string;
+	status: 'Rascunho' | 'Publicado' | 'Revisão' | 'Revogado';
+	author: string;
+	lastUpdated: Date;
+}
+
+const { version, status, author, lastUpdated } = Astro.props;
+
+// Format date for display (simple format)
+const formattedDate = lastUpdated.toLocaleDateString('pt-BR', {
+	year: 'numeric',
+	month: '2-digit',
+	day: '2-digit'
+});
+---
+
+<div class="document-metadata-simple" data-metadata-component>
+	<p class="metadata-line">
+		<span class="metadata-item"><strong>Versão:</strong> {version}</span>
+		<span class="metadata-separator">•</span>
+		<span class="metadata-item"><strong>Última Atualização:</strong> {formattedDate}</span>
+	</p>
+</div>
+
+<script>
+// Hide duplicate metadata components and position after H1
+if (typeof window !== 'undefined') {
+	window.addEventListener('DOMContentLoaded', () => {
+		const metadataComponents = document.querySelectorAll('[data-metadata-component]');
+
+		// Hide duplicates
+		if (metadataComponents.length > 1) {
+			for (let i = 1; i < metadataComponents.length; i++) {
+				(metadataComponents[i] as HTMLElement).style.display = 'none';
+			}
+		}
+
+		// Move metadata to appear after the first H1
+		const firstMetadata = metadataComponents[0] as HTMLElement;
+		if (firstMetadata) {
+			const container = firstMetadata.closest('.sl-container');
+			if (container) {
+				const firstH1 = container.querySelector('h1');
+				if (firstH1 && firstH1.parentNode) {
+					// Move metadata right after the H1
+					firstH1.parentNode.insertBefore(firstMetadata, firstH1.nextSibling);
+				}
+			}
+		}
+	});
+}
+</script>
+
+<style>
+	.document-metadata-simple {
+		margin-bottom: 1.5rem;
+	}
+
+	.metadata-line {
+		font-size: 0.875rem;
+		color: var(--sl-color-gray-3);
+		line-height: 1.6;
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.metadata-item {
+		white-space: nowrap;
+	}
+
+	.metadata-item strong {
+		color: var(--sl-color-gray-2);
+		font-weight: 600;
+	}
+
+	.metadata-separator {
+		color: var(--sl-color-gray-4);
+		user-select: none;
+	}
+
+	/* Responsive: stack items on small screens */
+	@media (max-width: 640px) {
+		.metadata-line {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.25rem;
+		}
+
+		.metadata-separator {
+			display: none;
+		}
+	}
+</style>
