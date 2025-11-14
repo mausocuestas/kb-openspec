@@ -55,10 +55,24 @@ function getClientIP(request: Request): string {
   return 'unknown';
 }
 
-// Helper function to ensure proper UTF-8 encoding
-function ensureUTF8(str: string): string {
-  // Normalize the string to ensure proper Unicode representation
-  return str.normalize('NFC');
+// Helper function to encode special characters as HTML entities
+function encodeHTMLEntities(str: string): string {
+  const entities: Record<string, string> = {
+    'á': '&aacute;', 'à': '&agrave;', 'â': '&acirc;', 'ã': '&atilde;', 'ä': '&auml;',
+    'Á': '&Aacute;', 'À': '&Agrave;', 'Â': '&Acirc;', 'Ã': '&Atilde;', 'Ä': '&Auml;',
+    'é': '&eacute;', 'è': '&egrave;', 'ê': '&ecirc;', 'ë': '&euml;',
+    'É': '&Eacute;', 'È': '&Egrave;', 'Ê': '&Ecirc;', 'Ë': '&Euml;',
+    'í': '&iacute;', 'ì': '&igrave;', 'î': '&icirc;', 'ï': '&iuml;',
+    'Í': '&Iacute;', 'Ì': '&Igrave;', 'Î': '&Icirc;', 'Ï': '&Iuml;',
+    'ó': '&oacute;', 'ò': '&ograve;', 'ô': '&ocirc;', 'õ': '&otilde;', 'ö': '&ouml;',
+    'Ó': '&Oacute;', 'Ò': '&Ograve;', 'Ô': '&Ocirc;', 'Õ': '&Otilde;', 'Ö': '&Ouml;',
+    'ú': '&uacute;', 'ù': '&ugrave;', 'û': '&ucirc;', 'ü': '&uuml;',
+    'Ú': '&Uacute;', 'Ù': '&Ugrave;', 'Û': '&Ucirc;', 'Ü': '&Uuml;',
+    'ç': '&ccedil;', 'Ç': '&Ccedil;',
+    'ñ': '&ntilde;', 'Ñ': '&Ntilde;'
+  };
+
+  return str.replace(/[áàâãäÁÀÂÃÄéèêëÉÈÊËíìîïÍÌÎÏóòôõöÓÒÔÕÖúùûüÚÙÛÜçÇñÑ]/g, (char) => entities[char] || char);
 }
 
 function formatFeedbackEmail(data: {
@@ -76,10 +90,15 @@ function formatFeedbackEmail(data: {
     timeStyle: 'short'
   });
 
-  // Ensure all text strings are properly UTF-8 encoded
-  const pageTitle = ensureUTF8(data.pageTitle);
-  const pageUrl = ensureUTF8(data.pageUrl);
-  const commentText = data.comment ? ensureUTF8(data.comment) : 'Nenhum comentário fornecido';
+  // Prepare text versions (normal UTF-8)
+  const pageTitle = data.pageTitle;
+  const pageUrl = data.pageUrl;
+  const commentText = data.comment || 'Nenhum comentário fornecido';
+
+  // Prepare HTML versions (with HTML entities for special characters)
+  const pageTitleHTML = encodeHTMLEntities(data.pageTitle);
+  const pageUrlHTML = encodeHTMLEntities(data.pageUrl);
+  const commentTextHTML = data.comment ? encodeHTMLEntities(data.comment) : 'Nenhum coment&aacute;rio fornecido';
 
   const textVersion = `Novo feedback foi submetido na Base de Conhecimento:
 
@@ -112,32 +131,32 @@ Este é um email automático da Base de Conhecimento.`;
   <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 20px; margin-bottom: 20px;">
 
     <p style="margin: 10px 0;">
-      <strong>📄 Documento:</strong><br>
-      ${pageTitle}
+      <strong>&#128196; Documento:</strong><br>
+      ${pageTitleHTML}
     </p>
 
     <p style="margin: 10px 0;">
-      <strong>🔗 URL:</strong><br>
-      <a href="${pageUrl}" style="color: #0066cc; text-decoration: none;">${pageUrl}</a>
+      <strong>&#128279; URL:</strong><br>
+      <a href="${pageUrl}" style="color: #0066cc; text-decoration: none;">${pageUrlHTML}</a>
     </p>
 
     <p style="margin: 10px 0;">
-      <strong>⏰ Data:</strong><br>
+      <strong>&#9200; Data:</strong><br>
       ${timestamp}
     </p>
 
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
 
     <p style="margin: 10px 0;">
-      <strong>Avaliação:</strong><br>
+      <strong>Avalia&ccedil;&atilde;o:</strong><br>
       <span style="display: inline-block; background-color: ${ratingColor}; color: white; padding: 6px 12px; border-radius: 4px; font-weight: 500;">
         ${ratingIcon}
       </span>
     </p>
 
     <p style="margin: 10px 0;">
-      <strong>Comentário:</strong><br>
-      <span style="display: block; background-color: #f8f9fa; padding: 12px; border-radius: 4px; margin-top: 8px; white-space: pre-wrap;">${commentText}</span>
+      <strong>Coment&aacute;rio:</strong><br>
+      <span style="display: block; background-color: #f8f9fa; padding: 12px; border-radius: 4px; margin-top: 8px; white-space: pre-wrap;">${commentTextHTML}</span>
     </p>
 
   </div>
