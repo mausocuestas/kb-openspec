@@ -241,10 +241,11 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Parse request body
+    // Parse request body with explicit UTF-8 decoding
     let body;
     try {
-      body = await request.json();
+      const rawBody = await request.text();
+      body = JSON.parse(rawBody);
     } catch (error) {
       return new Response(
         JSON.stringify({
