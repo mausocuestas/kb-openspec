@@ -61,8 +61,9 @@ function formatFeedbackEmail(data: {
   pageUrl: string;
   pageTitle: string;
   ip: string;
-}): { subject: string; text: string } {
+}): { subject: string; text: string; html: string } {
   const ratingIcon = data.rating === 'positive' ? '👍 Útil' : '👎 Não útil';
+  const ratingColor = data.rating === 'positive' ? '#00a651' : '#dc2626';
   const timestamp = new Date().toLocaleString('pt-BR', {
     timeZone: 'America/Sao_Paulo',
     dateStyle: 'short',
@@ -70,9 +71,7 @@ function formatFeedbackEmail(data: {
   });
   const commentText = data.comment || 'Nenhum comentário fornecido';
 
-  return {
-    subject: `Novo Feedback Recebido - ${data.pageTitle}`,
-    text: `Novo feedback foi submetido na Base de Conhecimento:
+  const textVersion = `Novo feedback foi submetido na Base de Conhecimento:
 
 📄 Documento: ${data.pageTitle}
 🔗 URL: ${data.pageUrl}
@@ -85,7 +84,66 @@ ${commentText}
 
 ---
 IP do usuário: ${data.ip}
-Este é um email automático da Base de Conhecimento.`
+Este é um email automático da Base de Conhecimento.`;
+
+  const htmlVersion = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Feedback Recebido</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+
+  <div style="background-color: #f8f9fa; border-left: 4px solid ${ratingColor}; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+    <h2 style="margin-top: 0; color: #1a1a1a;">Novo feedback foi submetido na Base de Conhecimento</h2>
+  </div>
+
+  <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 20px; margin-bottom: 20px;">
+
+    <p style="margin: 10px 0;">
+      <strong>📄 Documento:</strong><br>
+      ${data.pageTitle}
+    </p>
+
+    <p style="margin: 10px 0;">
+      <strong>🔗 URL:</strong><br>
+      <a href="${data.pageUrl}" style="color: #0066cc; text-decoration: none;">${data.pageUrl}</a>
+    </p>
+
+    <p style="margin: 10px 0;">
+      <strong>⏰ Data:</strong><br>
+      ${timestamp}
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+
+    <p style="margin: 10px 0;">
+      <strong>Avaliação:</strong><br>
+      <span style="display: inline-block; background-color: ${ratingColor}; color: white; padding: 6px 12px; border-radius: 4px; font-weight: 500;">
+        ${ratingIcon}
+      </span>
+    </p>
+
+    <p style="margin: 10px 0;">
+      <strong>Comentário:</strong><br>
+      <span style="display: block; background-color: #f8f9fa; padding: 12px; border-radius: 4px; margin-top: 8px; white-space: pre-wrap;">${commentText}</span>
+    </p>
+
+  </div>
+
+  <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; font-size: 12px; color: #6b7280;">
+    <p style="margin: 5px 0;">IP do usuário: <code style="background-color: #e5e7eb; padding: 2px 6px; border-radius: 3px;">${data.ip}</code></p>
+    <p style="margin: 5px 0;">Este é um email automático da Base de Conhecimento.</p>
+  </div>
+
+</body>
+</html>`;
+
+  return {
+    subject: `Novo Feedback Recebido - ${data.pageTitle}`,
+    text: textVersion,
+    html: htmlVersion
   };
 }
 
@@ -114,7 +172,8 @@ async function sendEmailNotification(feedbackData: {
       from: 'Base de Conhecimento <onboarding@resend.dev>', // Will be replaced with your domain
       to: [notificationEmail],
       subject: emailContent.subject,
-      text: emailContent.text
+      text: emailContent.text,
+      html: emailContent.html
     });
 
     if (error) {
