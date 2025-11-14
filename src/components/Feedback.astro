@@ -2,7 +2,7 @@
 /**
  * Feedback Component
  * Allows users to provide feedback on documents with thumbs up/down and optional comments
- * This is UI-only implementation - Story 2.2 will add backend integration
+ * Now integrated with Neon database for real feedback storage via /api/feedback endpoint
  */
 
 interface Props {
@@ -153,18 +153,73 @@ const pageTitle = documentTitle || 'documento';
 						btnText.textContent = 'Enviando...';
 					}
 
-					// Simulate submission (Story 2.2 will add real backend)
-					await new Promise((resolve) => setTimeout(resolve, 1000));
+					try {
+						// Get form data
+						const textarea = feedbackWidget.querySelector('#feedback-comment') as HTMLTextAreaElement;
+						const comment = textarea?.value?.trim() || '';
 
-					// Show success toast
-					showToast('Obrigado pelo seu feedback!', 'success');
+						// Prepare API request
+						const feedbackData = {
+							rating: selectedRating,
+							comment: comment,
+							pageUrl: window.location.href,
+							pageTitle: document.title || 'documento'
+						};
 
-					// Reset form after 2 seconds
-					setTimeout(() => {
-						resetForm();
-					}, 2000);
+						// Send feedback to API
+						const response = await fetch('/api/feedback', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(feedbackData)
+						});
 
-					isSubmitting = false;
+						const result = await response.json();
+
+						if (response.ok) {
+							// Success
+							showToast('Obrigado pelo seu feedback!', 'success');
+
+							// Reset form after 2 seconds
+							setTimeout(() => {
+								resetForm();
+							}, 2000);
+						} else {
+							// Error handling
+							let errorMessage = 'Ocorreu um erro ao enviar seu feedback.';
+
+							if (result.message) {
+								errorMessage = result.message;
+							} else if (response.status === 429) {
+								errorMessage = 'Muitas tentativas. Por favor, tente novamente mais tarde.';
+							} else if (response.status === 400) {
+								errorMessage = 'Dados inválidos. Por favor, verifique e tente novamente.';
+							}
+
+							showToast(errorMessage, 'error');
+
+							// Reset button state but keep form data for retry
+							isSubmitting = false;
+							submitBtn.disabled = false;
+							if (btnText) {
+								btnText.textContent = 'Tentar Novamente';
+							}
+						}
+
+					} catch (error) {
+						console.error('Feedback submission error:', error);
+
+						// Network or other error
+						showToast('Erro de conexão. Por favor, verifique sua internet e tente novamente.', 'error');
+
+						// Reset button state but keep form data for retry
+						isSubmitting = false;
+						submitBtn.disabled = false;
+						if (btnText) {
+							btnText.textContent = 'Tentar Novamente';
+						}
+					}
 				});
 			}
 

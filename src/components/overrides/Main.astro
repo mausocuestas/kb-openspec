@@ -1,0 +1,14 @@
+---
+// src/components/overrides/Main.astro
+import { SkipLink } from '@astrojs/starlight/components';
+import PageTitle from 'virtual:starlight/components/PageTitle';
+import ContentPanel from 'virtual:starlight/components/ContentPanel';
+---
+
+<main id="main-content">
+	<SkipLink />
+	<PageTitle />
+	<ContentPanel>
+		<slot />
+	</ContentPanel>
+</main>
