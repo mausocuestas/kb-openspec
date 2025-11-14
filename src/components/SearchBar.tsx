@@ -5,7 +5,7 @@ export function SearchBar() {
 
   useEffect(() => {
     // Move Starlight's search button to our container (not clone, but move!)
-    const searchButton = document.querySelector('site-search');
+    const searchButton = document.querySelector('site-search') as HTMLElement;
 
     if (searchButton && containerRef.current) {
       // Move (not clone) the original element to preserve event listeners

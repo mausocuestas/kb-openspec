@@ -7,6 +7,7 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
 	vite: {
+		// @ts-ignore - Vite plugin type compatibility
 		plugins: [tailwind()],
 	},
 	image: {
@@ -40,9 +41,6 @@ export default defineConfig({
 				ContentPanel: './src/components/overrides/ContentPanel.astro',
 				Footer: './src/components/overrides/Footer.astro',
 				PageTitle: './src/components/overrides/PageTitle.astro',
-			},
-			pagefind: {
-				forceLanguage: 'pt-br',
 			},
 			sidebar: [
 				{
