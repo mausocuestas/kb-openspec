@@ -55,6 +55,12 @@ function getClientIP(request: Request): string {
   return 'unknown';
 }
 
+// Helper function to ensure proper UTF-8 encoding
+function ensureUTF8(str: string): string {
+  // Normalize the string to ensure proper Unicode representation
+  return str.normalize('NFC');
+}
+
 function formatFeedbackEmail(data: {
   rating: string;
   comment: string | null;
@@ -69,12 +75,16 @@ function formatFeedbackEmail(data: {
     dateStyle: 'short',
     timeStyle: 'short'
   });
-  const commentText = data.comment || 'Nenhum comentário fornecido';
+
+  // Ensure all text strings are properly UTF-8 encoded
+  const pageTitle = ensureUTF8(data.pageTitle);
+  const pageUrl = ensureUTF8(data.pageUrl);
+  const commentText = data.comment ? ensureUTF8(data.comment) : 'Nenhum comentário fornecido';
 
   const textVersion = `Novo feedback foi submetido na Base de Conhecimento:
 
-📄 Documento: ${data.pageTitle}
-🔗 URL: ${data.pageUrl}
+📄 Documento: ${pageTitle}
+🔗 URL: ${pageUrl}
 ⏰ Data: ${timestamp}
 
 Avaliação: ${ratingIcon}
@@ -103,12 +113,12 @@ Este é um email automático da Base de Conhecimento.`;
 
     <p style="margin: 10px 0;">
       <strong>📄 Documento:</strong><br>
-      ${data.pageTitle}
+      ${pageTitle}
     </p>
 
     <p style="margin: 10px 0;">
       <strong>🔗 URL:</strong><br>
-      <a href="${data.pageUrl}" style="color: #0066cc; text-decoration: none;">${data.pageUrl}</a>
+      <a href="${pageUrl}" style="color: #0066cc; text-decoration: none;">${pageUrl}</a>
     </p>
 
     <p style="margin: 10px 0;">
@@ -141,7 +151,7 @@ Este é um email automático da Base de Conhecimento.`;
 </html>`;
 
   return {
-    subject: `Novo Feedback Recebido - ${data.pageTitle}`,
+    subject: `Novo Feedback Recebido - ${pageTitle}`,
     text: textVersion,
     html: htmlVersion
   };
@@ -173,7 +183,10 @@ async function sendEmailNotification(feedbackData: {
       to: [notificationEmail],
       subject: emailContent.subject,
       text: emailContent.text,
-      html: emailContent.html
+      html: emailContent.html,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      }
     });
 
     if (error) {
