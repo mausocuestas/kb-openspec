@@ -1,23 +1,23 @@
-## ADDED Requirements
+# feedback-storage Specification
 
+## Purpose
+TBD - created by archiving change implement-feedback-storage. Update Purpose after archive.
+## Requirements
 ### Requirement: Feedback Submission Endpoint
-The system SHALL provide an API endpoint for submitting user feedback on documents.
+The system SHALL provide an API endpoint for submitting user feedback on documents and trigger email notifications.
 
-#### Scenario: Successful feedback submission
-- **WHEN** a user submits positive or negative feedback with optional comment
-- **THEN** the system stores the feedback in the database
-- **AND** returns a success response with HTTP 201 status
-- **AND** includes a confirmation message
+#### Scenario: Successful feedback submission with notification
+- **WHEN** a user submits valid feedback
+- **THEN** the system saves the feedback to the database
+- **AND** sends an email notification to content curators
+- **AND** returns a success response regardless of email delivery status
 
-#### Scenario: Invalid feedback data
-- **WHEN** feedback submission contains invalid data (missing required fields, invalid rating)
-- **THEN** the system returns a validation error with HTTP 400 status
-- **AND** provides specific error messages for each validation failure
-
-#### Scenario: Rate limiting exceeded
-- **WHEN** a user exceeds the allowed feedback submission rate
-- **THEN** the system returns a rate limit error with HTTP 429 status
-- **AND** includes retry-after information
+#### Scenario: Feedback saved despite email failure
+- **WHEN** feedback is submitted and database save succeeds
+- **AND** email notification fails to send
+- **THEN** the system logs the email error
+- **AND** returns HTTP 201 success to the user
+- **AND** feedback remains saved in the database
 
 ### Requirement: Feedback Data Storage
 The system SHALL persist feedback data with proper metadata for analysis.
@@ -48,3 +48,4 @@ The system SHALL integrate the feedback component with real backend submission.
 - **THEN** the frontend displays an appropriate error message
 - **AND** allows the user to retry submission
 - **AND** maintains existing UI states appropriately
+
