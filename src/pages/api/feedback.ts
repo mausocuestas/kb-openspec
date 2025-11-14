@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { neon } from '@neondatabase/serverless';
+import { Resend } from 'resend';
 
 export const prerender = false;
 
@@ -52,6 +53,80 @@ function getClientIP(request: Request): string {
 
   // Fallback to a generic identifier
   return 'unknown';
+}
+
+function formatFeedbackEmail(data: {
+  rating: string;
+  comment: string | null;
+  pageUrl: string;
+  pageTitle: string;
+  ip: string;
+}): { subject: string; text: string } {
+  const ratingIcon = data.rating === 'positive' ? '👍 Útil' : '👎 Não útil';
+  const timestamp = new Date().toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+  const commentText = data.comment || 'Nenhum comentário fornecido';
+
+  return {
+    subject: `Novo Feedback Recebido - ${data.pageTitle}`,
+    text: `Novo feedback foi submetido na Base de Conhecimento:
+
+📄 Documento: ${data.pageTitle}
+🔗 URL: ${data.pageUrl}
+⏰ Data: ${timestamp}
+
+Avaliação: ${ratingIcon}
+
+Comentário:
+${commentText}
+
+---
+IP do usuário: ${data.ip}
+Este é um email automático da Base de Conhecimento.`
+  };
+}
+
+async function sendEmailNotification(feedbackData: {
+  rating: string;
+  comment: string | null;
+  pageUrl: string;
+  pageTitle: string;
+  ip: string;
+  feedbackId: number;
+}): Promise<void> {
+  const resendApiKey = import.meta.env.RESEND_API_KEY;
+  const notificationEmail = import.meta.env.FEEDBACK_NOTIFICATION_EMAIL;
+
+  // Skip if not configured
+  if (!resendApiKey || !notificationEmail) {
+    console.warn('Email notification skipped: RESEND_API_KEY or FEEDBACK_NOTIFICATION_EMAIL not configured');
+    return;
+  }
+
+  try {
+    const resend = new Resend(resendApiKey);
+    const emailContent = formatFeedbackEmail(feedbackData);
+
+    const { data, error } = await resend.emails.send({
+      from: 'Base de Conhecimento <onboarding@resend.dev>', // Will be replaced with your domain
+      to: [notificationEmail],
+      subject: emailContent.subject,
+      text: emailContent.text
+    });
+
+    if (error) {
+      console.error('Failed to send email notification:', error);
+      return;
+    }
+
+    console.log(`Email notification sent successfully for feedback ID ${feedbackData.feedbackId}:`, data);
+  } catch (error) {
+    console.error('Error sending email notification:', error);
+    // Don't throw - email failures should not block feedback submission
+  }
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -189,13 +264,27 @@ export const POST: APIRoute = async ({ request }) => {
         RETURNING id
       `;
 
+      const feedbackId = result[0]?.id;
       console.log('Feedback inserted successfully:', result);
+
+      // Send email notification (non-blocking)
+      sendEmailNotification({
+        rating: sanitizedRating,
+        comment: sanitizedComment,
+        pageUrl: sanitizedPageUrl,
+        pageTitle: sanitizedPageTitle,
+        ip,
+        feedbackId
+      }).catch(error => {
+        // Email errors are already logged in sendEmailNotification
+        console.error('Email notification failed for feedback ID', feedbackId, ':', error);
+      });
 
       return new Response(
         JSON.stringify({
           success: true,
           message: 'Feedback submitted successfully',
-          feedbackId: result[0]?.id
+          feedbackId
         }),
         {
           status: 201,
