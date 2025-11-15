@@ -38,7 +38,6 @@ export default defineConfig({
 			},
 			customCss: [
 				'./src/assets/app.css',
-				'./src/assets/custom.css',
 			],
 			components: {
 				ContentPanel: './src/components/overrides/ContentPanel.astro',

@@ -230,6 +230,274 @@ code {
 	border-radius: 0.25rem;
 }
 
+/* ============================================
+   Component Overrides
+   ============================================ */
+
+/* Sidebar - Selected Item Visibility */
+[data-theme='light'] a[aria-current='page'],
+[data-theme='light'] a[aria-current='page']:hover,
+[data-theme='light'] a[aria-current='page']:focus {
+	color: white !important;
+	background-color: var(--sl-color-text-accent) !important;
+}
+
+[data-theme='dark'] a[aria-current='page'],
+[data-theme='dark'] a[aria-current='page']:hover,
+[data-theme='dark'] a[aria-current='page']:focus {
+	color: var(--sl-color-black) !important;
+	background-color: var(--sl-color-text-accent) !important;
+}
+
+.sidebar a[aria-current='page'] {
+	font-weight: 600;
+}
+
+/* Content Width - Increased by 15% */
+:root {
+	--sl-content-width: 51.75rem; /* 45rem * 1.15 = ~828px */
+}
+
+/* Pagination - Compact Navigation Cards */
+.pagination-links a {
+	padding: 0.5rem 0.75rem !important;
+	min-height: auto !important;
+}
+
+.pagination-links .link-title {
+	font-size: 1rem !important; /* 16px */
+	font-weight: 600 !important; /* semibold */
+}
+
+.pagination-links svg,
+.pagination-links .icon {
+	display: none !important;
+}
+
+/* Table of Contents - Active Section Highlighting */
+.right-sidebar nav a[aria-current='true'],
+.right-sidebar nav a.current-heading {
+	font-weight: 700 !important;
+	color: var(--sl-color-text-accent) !important;
+}
+
+[data-theme='light'] .right-sidebar nav a[aria-current='true'],
+[data-theme='light'] .right-sidebar nav a.current-heading {
+	color: var(--sl-color-accent-high) !important;
+}
+
+[data-theme='dark'] .right-sidebar nav a[aria-current='true'],
+[data-theme='dark'] .right-sidebar nav a.current-heading {
+	color: var(--sl-color-accent) !important;
+}
+
+.right-sidebar nav a {
+	transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+/* ============================================
+   Pagefind Search Results Customization
+   ============================================ */
+
+/* Base Pagefind UI Variables - Light Theme */
+:root {
+	--pagefind-ui-scale: 1;
+	--pagefind-ui-primary: var(--sl-color-accent);
+	--pagefind-ui-text: var(--sl-color-text);
+	--pagefind-ui-background: var(--sl-color-bg);
+	--pagefind-ui-border: var(--sl-color-hairline);
+	--pagefind-ui-tag: var(--sl-color-gray-5);
+	--pagefind-ui-border-width: 1px;
+	--pagefind-ui-border-radius: 0.5rem;
+	--pagefind-ui-image-border-radius: 0.5rem;
+	--pagefind-ui-image-box-ratio: 3 / 2;
+	--pagefind-ui-font: inherit;
+}
+
+/* Dark Theme Overrides */
+[data-theme='dark'] {
+	--pagefind-ui-primary: var(--sl-color-accent-high);
+	--pagefind-ui-text: var(--sl-color-gray-1);
+	--pagefind-ui-background: var(--sl-color-bg);
+	--pagefind-ui-border: var(--sl-color-hairline-shade);
+	--pagefind-ui-tag: var(--sl-color-gray-6);
+}
+
+/* Search Results Container */
+.pagefind-ui {
+	font-family: var(--sl-font) !important;
+}
+
+/* Search Input */
+.pagefind-ui__search-input {
+	height: 3rem !important;
+	font-size: 1rem !important;
+	border-radius: 0.5rem !important;
+	border: 1px solid var(--pagefind-ui-border) !important;
+	padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+	background-color: var(--pagefind-ui-background) !important;
+	color: var(--pagefind-ui-text) !important;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.pagefind-ui__search-input:focus {
+	border-color: var(--pagefind-ui-primary) !important;
+	box-shadow: 0 0 0 3px rgba(var(--sl-color-accent-rgb), 0.1) !important;
+	outline: none !important;
+}
+
+.pagefind-ui__search-clear {
+	color: var(--pagefind-ui-text) !important;
+}
+
+/* Results Container */
+.pagefind-ui__results {
+	margin-top: 1.5rem !important;
+}
+
+/* Individual Result Card */
+.pagefind-ui__result {
+	border: 1px solid var(--pagefind-ui-border) !important;
+	border-radius: 0.5rem !important;
+	padding: 1.25rem !important;
+	margin-bottom: 1rem !important;
+	background-color: var(--pagefind-ui-background) !important;
+	transition: all 0.2s ease !important;
+}
+
+.pagefind-ui__result:hover {
+	border-color: var(--pagefind-ui-primary) !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+	transform: translateY(-2px) !important;
+}
+
+/* Result Title */
+.pagefind-ui__result-title {
+	font-size: 1.25rem !important;
+	font-weight: 600 !important;
+	color: var(--pagefind-ui-text) !important;
+	margin-bottom: 0.5rem !important;
+	line-height: 1.4 !important;
+}
+
+.pagefind-ui__result-link {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.pagefind-ui__result-link:hover .pagefind-ui__result-title {
+	color: var(--pagefind-ui-primary) !important;
+}
+
+/* Result Excerpt */
+.pagefind-ui__result-excerpt {
+	font-size: 0.95rem !important;
+	line-height: 1.6 !important;
+	color: var(--sl-color-gray-2) !important;
+	margin-top: 0.5rem !important;
+	margin-bottom: 0.75rem !important;
+}
+
+/* Highlighted Search Terms */
+.pagefind-ui__result-excerpt mark,
+.pagefind-ui__result-title mark {
+	background-color: rgba(var(--sl-color-accent-rgb), 0.2) !important;
+	color: var(--pagefind-ui-primary) !important;
+	font-weight: 600 !important;
+	padding: 0.1em 0.2em !important;
+	border-radius: 0.2em !important;
+}
+
+[data-theme='dark'] .pagefind-ui__result-excerpt mark,
+[data-theme='dark'] .pagefind-ui__result-title mark {
+	background-color: rgba(var(--sl-color-accent-rgb), 0.3) !important;
+}
+
+/* Result Metadata */
+.pagefind-ui__result-tags {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 0.5rem !important;
+	margin-top: 0.75rem !important;
+}
+
+.pagefind-ui__result-tag {
+	background-color: var(--pagefind-ui-tag) !important;
+	color: var(--pagefind-ui-text) !important;
+	padding: 0.25rem 0.75rem !important;
+	border-radius: 9999px !important;
+	font-size: 0.85rem !important;
+	font-weight: 500 !important;
+	border: 1px solid var(--pagefind-ui-border) !important;
+}
+
+/* Category-specific Tag Styling */
+[data-pagefind-filter="categoria:protocolos"] {
+	background-color: rgba(59, 130, 246, 0.1) !important;
+	border-color: rgba(59, 130, 246, 0.3) !important;
+	color: rgb(59, 130, 246) !important;
+}
+
+[data-pagefind-filter="categoria:formulários"] {
+	background-color: rgba(16, 185, 129, 0.1) !important;
+	border-color: rgba(16, 185, 129, 0.3) !important;
+	color: rgb(16, 185, 129) !important;
+}
+
+[data-pagefind-filter="categoria:manuais"] {
+	background-color: rgba(249, 115, 22, 0.1) !important;
+	border-color: rgba(249, 115, 22, 0.3) !important;
+	color: rgb(249, 115, 22) !important;
+}
+
+/* Loading State */
+.pagefind-ui__loading {
+	color: var(--pagefind-ui-text) !important;
+	font-size: 1rem !important;
+	text-align: center !important;
+	padding: 2rem !important;
+}
+
+/* No Results Message */
+.pagefind-ui__message {
+	text-align: center !important;
+	padding: 3rem 1rem !important;
+	color: var(--sl-color-gray-3) !important;
+	font-size: 1.1rem !important;
+}
+
+/* Results Count */
+.pagefind-ui__results-area {
+	margin-top: 1rem !important;
+}
+
+.pagefind-ui__heading {
+	font-size: 0.9rem !important;
+	color: var(--sl-color-gray-3) !important;
+	margin-bottom: 1rem !important;
+	font-weight: 500 !important;
+}
+
+/* ============================================
+   Media Queries and Responsive Styles
+   ============================================ */
+
+/* Responsive Design for Pagefind */
+@media (max-width: 768px) {
+	.pagefind-ui__result {
+		padding: 1rem !important;
+	}
+
+	.pagefind-ui__result-title {
+		font-size: 1.1rem !important;
+	}
+
+	.pagefind-ui__result-excerpt {
+		font-size: 0.9rem !important;
+	}
+}
+
+/* Print Styles */
 @media print {
 	header, nav, .sidebar {
 		display: none;
