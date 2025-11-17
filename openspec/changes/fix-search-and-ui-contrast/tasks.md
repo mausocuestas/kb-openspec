@@ -46,9 +46,8 @@
 
 ## 7. Additional Fixes (Post-Implementation)
 - [x] 7.1 Fix keyboard shortcut (Ctrl K) styling with proper contrast
-- [x] 7.2 Change output mode from 'server' to 'hybrid' for Pagefind compatibility
-- [x] 7.3 Fix Starlight header search button background in document pages
-- [x] 7.4 Update Ctrl K badge to match search button styling
+- [x] 7.2 Fix Starlight header search button background in document pages
+- [x] 7.3 Update Ctrl K badge to match search button styling
 
 ## Notes
 - **Pagefind in Development**: Pagefind requires a production build to generate the search index. In development mode, search functionality will show "search only available in production builds" until a build is run. This is a known limitation of Pagefind with SSR/hybrid modes.
