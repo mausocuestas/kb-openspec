@@ -7,7 +7,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-	output: 'server',
+	output: 'hybrid',
 	adapter: vercel(),
 	vite: {
 		// @ts-ignore - Vite plugin type compatibility
@@ -44,6 +44,7 @@ export default defineConfig({
 				Footer: './src/components/overrides/Footer.astro',
 				PageTitle: './src/components/overrides/PageTitle.astro',
 			},
+			pagefind: true,
 			sidebar: [
 				{
 					label: 'Protocolos e Normas',

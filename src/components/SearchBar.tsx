@@ -30,6 +30,12 @@ export function SearchBar() {
         button.style.display = 'flex';
         button.style.alignItems = 'center';
         button.style.minWidth = '100%';
+
+        // Use theme-aware CSS variables for colors
+        button.style.backgroundColor = 'var(--sl-color-bg-nav)';
+        button.style.color = 'var(--sl-color-text)';
+        button.style.border = '1px solid var(--sl-color-hairline)';
+        button.style.transition = 'border-color 0.2s ease, box-shadow 0.2s ease';
       }
 
       // Style the icon
@@ -37,6 +43,7 @@ export function SearchBar() {
       if (svg) {
         svg.style.width = '1.25rem';
         svg.style.height = '1.25rem';
+        svg.style.color = 'var(--sl-color-text)';
       }
     }
   }, []);

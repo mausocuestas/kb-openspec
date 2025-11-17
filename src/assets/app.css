@@ -6,6 +6,18 @@
 /* Tailwind v4 Import */
 @import "tailwindcss";
 
+/*
+ * CSS Custom Properties Reference
+ *
+ * Light/Dark Theme Variables:
+ * - --sl-color-white, --sl-color-black: Pure white and black colors
+ * - --sl-color-gray-1 to --sl-color-gray-6: Gray scale from light to dark
+ * - --sl-color-accent: Primary accent color
+ * - --sl-color-text: Main text color
+ * - --sl-color-bg: Background color
+ * - --health-green, --health-teal: Department brand colors
+ */
+
 /* Theme Variables */
 :root {
   --background: oklch(1.00 0 0);
@@ -65,6 +77,18 @@
   --sl-color-bg-sidebar: oklch(1.00 0 0);
   --sl-color-hairline: oklch(0.92 0 0);
 
+  /* Base colors */
+  --sl-color-white: oklch(1.00 0 0);
+  --sl-color-black: oklch(0.00 0 0);
+
+  /* Gray scale (light to dark) */
+  --sl-color-gray-1: oklch(0.97 0 0);
+  --sl-color-gray-2: oklch(0.71 0 0);
+  --sl-color-gray-3: oklch(0.56 0 0);
+  --sl-color-gray-4: oklch(0.42 0 0);
+  --sl-color-gray-5: oklch(0.27 0 0);
+  --sl-color-gray-6: oklch(0.14 0 0);
+
   /* Health Department Colors */
   --health-green: #00a651;
   --health-green-light: #e6f7ef;
@@ -123,6 +147,18 @@
   --sl-color-bg-nav: oklch(0.20 0 0);
   --sl-color-bg-sidebar: oklch(0.14 0 0);
   --sl-color-hairline: oklch(1.00 0 0 / 10%);
+
+  /* Base colors */
+  --sl-color-white: oklch(1.00 0 0);
+  --sl-color-black: oklch(0.00 0 0);
+
+  /* Gray scale (light to dark) */
+  --sl-color-gray-1: oklch(0.97 0 0);
+  --sl-color-gray-2: oklch(0.71 0 0);
+  --sl-color-gray-3: oklch(0.56 0 0);
+  --sl-color-gray-4: oklch(0.42 0 0);
+  --sl-color-gray-5: oklch(0.27 0 0);
+  --sl-color-gray-6: oklch(0.14 0 0);
 }
 
 @theme inline {
@@ -186,6 +222,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 700;
 	letter-spacing: -0.02em;
+	color: var(--sl-color-text);
 }
 
 header.header {
@@ -251,6 +288,17 @@ code {
 
 .sidebar a[aria-current='page'] {
 	font-weight: 600;
+}
+
+/* Sidebar Category Labels - Ensure Visibility */
+.sidebar .top-level > li > details > summary,
+.sidebar .top-level > li > details > summary span {
+	color: var(--sl-color-text) !important;
+}
+
+.sidebar summary,
+.sidebar .group-label {
+	color: var(--sl-color-text) !important;
 }
 
 /* Content Width - Increased by 15% */
@@ -502,4 +550,74 @@ code {
 	header, nav, .sidebar {
 		display: none;
 	}
+}
+
+/* ============================================
+   Theme Selector Styling
+   ============================================ */
+
+/* Starlight Header Search Button Styling */
+site-search button {
+	background-color: var(--sl-color-bg-nav) !important;
+	color: var(--sl-color-text) !important;
+	border: 1px solid var(--sl-color-hairline) !important;
+}
+
+site-search button:hover {
+	background-color: var(--sl-color-accent-low) !important;
+	border-color: var(--sl-color-accent) !important;
+}
+
+site-search button svg {
+	color: var(--sl-color-text) !important;
+}
+
+/* Search Keyboard Shortcut (Ctrl K) Styling */
+site-search button kbd,
+site-search kbd {
+	background-color: var(--sl-color-bg-nav) !important;
+	color: var(--sl-color-text) !important;
+	border: 1px solid var(--sl-color-hairline) !important;
+	padding: 0.125rem 0.375rem !important;
+	border-radius: 0.25rem !important;
+	font-size: 0.75rem !important;
+	opacity: 0.8 !important;
+}
+
+/* Theme selector button and dropdown */
+starlight-theme-select {
+	color: var(--sl-color-text) !important;
+}
+
+starlight-theme-select select,
+starlight-theme-select button {
+	background-color: var(--sl-color-bg-nav) !important;
+	color: var(--sl-color-text) !important;
+	border-color: var(--sl-color-hairline) !important;
+}
+
+/* Theme selector options in dropdown */
+starlight-theme-select option {
+	background-color: var(--sl-color-bg) !important;
+	color: var(--sl-color-text) !important;
+}
+
+/* Theme selector hover state */
+starlight-theme-select select:hover,
+starlight-theme-select button:hover {
+	background-color: var(--sl-color-accent-low) !important;
+	border-color: var(--sl-color-accent) !important;
+}
+
+/* Theme selector focus state */
+starlight-theme-select select:focus,
+starlight-theme-select button:focus {
+	outline: 2px solid var(--sl-color-accent) !important;
+	outline-offset: 2px !important;
+}
+
+/* Dark theme specific overrides */
+[data-theme='dark'] starlight-theme-select option {
+	background-color: var(--sl-color-bg-nav) !important;
+	color: var(--sl-color-text) !important;
 }
