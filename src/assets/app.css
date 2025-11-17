@@ -574,7 +574,9 @@ site-search button svg {
 
 /* Search Keyboard Shortcut (Ctrl K) Styling */
 site-search button kbd,
-site-search kbd {
+site-search kbd,
+site-search button command,
+site-search command {
 	background-color: var(--sl-color-bg-nav) !important;
 	color: var(--sl-color-text) !important;
 	border: 1px solid var(--sl-color-hairline) !important;
@@ -582,6 +584,36 @@ site-search kbd {
 	border-radius: 0.25rem !important;
 	font-size: 0.75rem !important;
 	opacity: 0.8 !important;
+}
+
+/* Ensure text inside command element is visible */
+site-search button command *,
+site-search command * {
+	color: var(--sl-color-text) !important;
+}
+
+/* Search Modal/Dialog Styling */
+site-search dialog,
+site-search [role="dialog"] {
+	background-color: var(--sl-color-bg) !important;
+	color: var(--sl-color-text) !important;
+	border: 1px solid var(--sl-color-hairline) !important;
+}
+
+site-search dialog input,
+site-search [role="dialog"] input {
+	background-color: var(--sl-color-bg-nav) !important;
+	color: var(--sl-color-text) !important;
+	border: 1px solid var(--sl-color-hairline) !important;
+}
+
+site-search dialog p,
+site-search dialog span,
+site-search dialog div,
+site-search [role="dialog"] p,
+site-search [role="dialog"] span,
+site-search [role="dialog"] div {
+	color: var(--sl-color-text) !important;
 }
 
 /* Theme selector button and dropdown */
